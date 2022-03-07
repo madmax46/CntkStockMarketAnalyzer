@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2015
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockMarketAnalyzer", "StockMarketAnalyzer\StockMarketAnalyzer.csproj", "{4568CC4F-610B-423B-8CAF-F06192EEC3BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockMarketNetworkLib", "..\..\NeuralNetForStockMarket\firstVersion\StockMarketNetworkLib\StockMarketNetworkLib.csproj", "{6F2940A9-CF54-4008-B585-DCED47621705}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockMarketTest", "StockMarketTest\StockMarketTest.csproj", "{A2521D5E-8B8C-4CAC-B6F5-E057A8334C94}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4568CC4F-610B-423B-8CAF-F06192EEC3BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4568CC4F-610B-423B-8CAF-F06192EEC3BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4568CC4F-610B-423B-8CAF-F06192EEC3BB}.Debug|x64.ActiveCfg = Debug|x64
+		{4568CC4F-610B-423B-8CAF-F06192EEC3BB}.Debug|x64.Build.0 = Debug|x64
+		{4568CC4F-610B-423B-8CAF-F06192EEC3BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4568CC4F-610B-423B-8CAF-F06192EEC3BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4568CC4F-610B-423B-8CAF-F06192EEC3BB}.Release|x64.ActiveCfg = Release|Any CPU
+		{4568CC4F-610B-423B-8CAF-F06192EEC3BB}.Release|x64.Build.0 = Release|Any CPU
+		{6F2940A9-CF54-4008-B585-DCED47621705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F2940A9-CF54-4008-B585-DCED47621705}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F2940A9-CF54-4008-B585-DCED47621705}.Debug|x64.ActiveCfg = Debug|x64
+		{6F2940A9-CF54-4008-B585-DCED47621705}.Debug|x64.Build.0 = Debug|x64
+		{6F2940A9-CF54-4008-B585-DCED47621705}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F2940A9-CF54-4008-B585-DCED47621705}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F2940A9-CF54-4008-B585-DCED47621705}.Release|x64.ActiveCfg = Release|Any CPU
+		{6F2940A9-CF54-4008-B585-DCED47621705}.Release|x64.Build.0 = Release|Any CPU
+		{A2521D5E-8B8C-4CAC-B6F5-E057A8334C94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2521D5E-8B8C-4CAC-B6F5-E057A8334C94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2521D5E-8B8C-4CAC-B6F5-E057A8334C94}.Debug|x64.ActiveCfg = Debug|x64
+		{A2521D5E-8B8C-4CAC-B6F5-E057A8334C94}.Debug|x64.Build.0 = Debug|x64
+		{A2521D5E-8B8C-4CAC-B6F5-E057A8334C94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2521D5E-8B8C-4CAC-B6F5-E057A8334C94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2521D5E-8B8C-4CAC-B6F5-E057A8334C94}.Release|x64.ActiveCfg = Release|Any CPU
+		{A2521D5E-8B8C-4CAC-B6F5-E057A8334C94}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D1FA946-E9CA-4059-9244-7510368AFAE6}
+	EndGlobalSection
+EndGlobal

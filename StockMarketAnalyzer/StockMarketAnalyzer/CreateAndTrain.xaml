@@ -1,0 +1,432 @@
+﻿<Window x:Class="StockMarketAnalyzer.CreateAndTrain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StockMarketAnalyzer"
+        xmlns:lib="clr-namespace:StockMarketNetworkLib;assembly=StockMarketNetworkLib"
+
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+       
+        mc:Ignorable="d" 
+        Title="CreateAndTrain" Height="731.333" Width="1000" MinHeight="700" MinWidth="1000" >
+
+    <Grid >
+        <ToolBar x:Name="toolBar" FontSize="16" Height="32" VerticalAlignment="Top">
+            <Menu>
+                <MenuItem Header="Файл" FontSize="16" Width="80">
+                    <MenuItem x:Name="UISaveModelMenuItem" Header="Сохранить" Click="UISaveModelMenuItem_Click"/>
+                    <MenuItem x:Name="UILoadModelMenuItem" Header="Загрузить" Click="UILoadModelMenuItem_Click"/>
+                    <MenuItem x:Name="UIExitMenuItem" Header="Выход" Click="UIExitMenuItem_Click"/>
+                </MenuItem>
+                <MenuItem x:Name="UICreateDataForTestMatFunction" Header="Подготовить данные по мат функциям" Margin="15,0,0,0" Click="UICreateDataForTestMatFunction_Click" FontSize="16" Height="27"/>
+
+            </Menu>
+        </ToolBar>
+
+
+        <TabControl FontSize="18" x:Name="tabControl" Margin="0,32,0,0" SelectionChanged="tabControl_SelectionChanged">
+            <TabItem Header="Работа с данными">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="279" MinWidth="270" MaxWidth="270" />
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60*"></RowDefinition>
+                        <RowDefinition Height="57*"></RowDefinition>
+                        <RowDefinition Height="483*"></RowDefinition>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Column="1"  Margin="10,15,0,0" Height="53" VerticalAlignment="Top" Grid.RowSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40*" MinWidth="80" MaxWidth="130"/>
+                            <ColumnDefinition Width="171*"/>
+                            <ColumnDefinition Width="140"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock TextWrapping="Wrap"  VerticalAlignment="Center" Height="48"  >Путь к данным</TextBlock>
+                        <TextBox x:Name="UiTextPathToFile"  Grid.Column="1"  TextWrapping="NoWrap"  VerticalAlignment="Center" Text="" RenderTransformOrigin="0.5,0.5" Height="30" Margin="0,12,0,11">
+                        </TextBox>
+                        <Button x:Name="UiButtonLoad" Content="Загрузить" Grid.Column="3" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="125" Height="30" Margin="5,12,0,11" Click="UiButtonLoad_Click" />
+                    </Grid>
+
+                    <GroupBox Grid.Column="0" Grid.Row="0" Grid.RowSpan="3" Header="Параметры данных из файла" Height="227" VerticalAlignment="Top">
+                        <Grid Margin="0,0,0,1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="12*" ></ColumnDefinition>
+                                <ColumnDefinition Width="7*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="62"></RowDefinition>
+                                <RowDefinition Height="40"></RowDefinition>
+                                <RowDefinition Height="46"></RowDefinition>
+                                <RowDefinition Height="59"></RowDefinition>
+                                <RowDefinition Height="59"></RowDefinition>
+
+
+
+                            </Grid.RowDefinitions>
+                            <TextBlock TextWrapping="WrapWithOverflow" Margin="5,10,0,5"  VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Height="48" >Разделитель столбцов</TextBlock>
+                            <TextBox x:Name="UIColumtSplit"  Grid.Column="1"  Grid.Row="0" Height="30"  TextWrapping="NoWrap" Text=";" TextAlignment="Center" VerticalAlignment="Center" />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0"  VerticalAlignment="Center" Grid.Row="1" Margin="5,5,0,1" Height="35" >Формат даты(?)</TextBlock>
+                            <TextBox x:Name="UIDateFormat" Grid.Column="1"  Grid.Row="1" Height="35" TextWrapping="NoWrap" Text="гггммдд" VerticalAlignment="Center" Margin="0,3"/>
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" VerticalAlignment="Center" Grid.Row="2" Margin="5,0,0,0" Height="35"  >Ф-т времени(?)</TextBlock>
+                            <TextBox x:Name="NeuronOutpuCount" Grid.Column="1"  Grid.Row="2" Height="30" TextWrapping="NoWrap" Text="ччммсс" VerticalAlignment="Center"  />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"  Height="50" Grid.ColumnSpan="1" Margin="0,5" >Есть заголовок таблицы</TextBlock>
+                            <CheckBox x:Name="UICheckBoxHeader" Grid.Column="1"  Grid.Row="3" IsChecked="True" HorizontalAlignment="Center" VerticalAlignment="Center" Height="16"  Width="16" Margin="39,22,40,22">
+                                <CheckBox.LayoutTransform>
+                                    <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                                </CheckBox.LayoutTransform>
+                            </CheckBox>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Column="0" Grid.Row="2" Header="П-ры обучающей выборки" Margin="0,116,0,4">
+                        <Grid Margin="0,0,0,-2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="12*" ></ColumnDefinition>
+                                <ColumnDefinition Width="7*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"></RowDefinition>
+                                <RowDefinition Height="36"></RowDefinition>
+                                <RowDefinition Height="54"></RowDefinition>
+                                <RowDefinition Height="58"></RowDefinition>
+                                <RowDefinition Height="43*"></RowDefinition>
+                                <RowDefinition Height="43*"/>
+                                <RowDefinition Height="26*"/>
+                                <RowDefinition Height="35*"/>
+
+
+                            </Grid.RowDefinitions>
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" VerticalAlignment="Center" Grid.Row="0" Margin="5,8,0,2" Height="30" >Нормализация</TextBlock>
+                            <ComboBox x:Name="UINormalizeMethod" Grid.Column="1" ItemsSource="{Binding}" SelectedIndex="1"  Grid.Row="0" Height="30"  VerticalAlignment="Center" Margin="0,5"  />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" VerticalAlignment="Center" Grid.Row="1" Margin="5,2,0,0" Height="34"  Text="Окно значений"  />
+                            <TextBox x:Name="UIWindow" Grid.Column="1"  Grid.Row="1" Height="26" TextWrapping="NoWrap" Text="30" VerticalAlignment="Center" TextAlignment="Center" Margin="0,5"    />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" VerticalAlignment="Center" Grid.Row="2" Margin="5,6,0,0" Height="48"  >Следующее значение</TextBlock>
+                            <TextBox x:Name="UINextValue" Grid.Column="1"  Grid.Row="2" Height="24" TextWrapping="NoWrap" Text="1" VerticalAlignment="Center" TextAlignment="Center" Margin="0,15"   />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" VerticalAlignment="Center" Grid.Row="3" Margin="5,8,0,2" Height="48" ><Run Text="Индекс столбца "/><Run Text="прогнозирования"/></TextBlock>
+                            <TextBox x:Name="UIImportantPriceValue" Grid.Column="1"  Grid.Row="3" Height="24" TextWrapping="NoWrap" Text="3" VerticalAlignment="Center" TextAlignment="Center" Margin="0,24,0,10"   />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" TextBlock.FontSize="14" Grid.Row="4" Margin="5,0,0,0" Height="40" VerticalAlignment="Top"  ><Run Text="Индексы всех столбцов, для анализа (через &quot;;&quot;)"/></TextBlock>
+                            <TextBox x:Name="UIAllAnalysisValues" Height="24" TextWrapping="NoWrap" Text="0;1;2;3;4" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="1"  Grid.Row="4" Margin="0,14,0,5"   />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" TextBlock.FontSize="15"  Grid.Row="5" Margin="5,0,0,0" Height="39" VerticalAlignment="Top"><Run Text="% обучающей выборки (от всех)"/></TextBlock>
+                            <TextBox x:Name="UIPercentTrain" Height="24" TextWrapping="NoWrap" Text="75" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="1" Margin="5,7,0,12" Grid.Row="5"   />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" TextBlock.FontSize="15"  Grid.Row="6" Margin="5,0,0,0" Height="30" VerticalAlignment="Top" Grid.RowSpan="2"   >
+                                <Run Text="% тестовой выборки"/></TextBlock>
+                            <TextBox x:Name="UIPercentTest" Height="24" TextWrapping="NoWrap" Text="25" VerticalAlignment="Top" TextAlignment="Center" Grid.Column="1" Margin="5,0,0,0" Grid.Row="6"   />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" TextBlock.FontSize="15"  Grid.Row="7" Margin="5,0,0,-4" Height="39" VerticalAlignment="Top"><Run Text="доп. множитель изменения цены"/></TextBlock>
+                            <TextBox x:Name="UIDopMultPriceChabge" Height="24" TextWrapping="NoWrap" Text="1" VerticalAlignment="Center" TextAlignment="Center" Grid.Column="1" Margin="5,8,0,3" Grid.Row="7"   />
+
+                        </Grid>
+                    </GroupBox>
+                    <Grid Grid.Row="1" Grid.Column="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+
+
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="UIClearUniportantInfo" Content="Очистить &#xD;&#xA;данные" TextBlock.FontSize="14" TextBlock.TextAlignment="Center" Padding="0" Grid.Column="0"  Width="123" Height="40" Click="UIClearUniportantInfo_Click" Margin="10,8,0,9" HorizontalAlignment="Left"  />
+                        <Button x:Name="UILeaveOnlyStockPrice" TextBlock.FontSize="14"  Grid.Column="1" Height="40" TextBlock.TextAlignment="Center" Padding="0" Click="UILeaveOnlyStockPrice_Click" Margin="10,8,0,9" HorizontalAlignment="Left" Width="123" >
+                            <TextBlock TextAlignment="Center" Width="108" Height="38" >Оставить цены и<LineBreak/>объем</TextBlock>
+                        </Button>
+                        <ComboBox x:Name="UIUseDataColumns" Grid.Column="2" SelectedIndex="1" HorizontalAlignment="Left" Width="143" VerticalAlignment="Center">
+                            <ComboBoxItem>
+                                <TextBlock Text="Один столбец"/>
+                            </ComboBoxItem>
+                            <TextBlock Text="Все данные"/>
+                        </ComboBox>
+                        <Button x:Name="UIClassification" Content="Классификация&#xD;&#xA;вырастет/упадет" TextBlock.TextAlignment="Center" Padding="0" TextBlock.FontSize="14"  Grid.Column="3"  Width="124" Height="40" Click="UIClassification_Click" Margin="10,8,0,9" HorizontalAlignment="Left"  />
+                        <Button x:Name="UIClasterization" TextBlock.TextAlignment="Center" Padding="0" Content="Регрессия &#xD;&#xA;изменения цены"  Grid.Column="4" TextBlock.FontSize="14" Width="123" Click="UIClasterization_Click" Margin="10,8,0,10" HorizontalAlignment="Left"  />
+
+                    </Grid>
+
+                    <DataGrid x:Name="UiAllDataGrid" Grid.Column="1" Grid.Row="2" SelectionUnit="CellOrRowHeader" CanUserReorderColumns="False" AutoGenerateColumns="True" CanUserSortColumns="False"    Margin="5,5,5,4" IsReadOnly="True" ItemsSource="{Binding}"  >
+                        <DataGrid.ColumnHeaderStyle>
+                            <Style TargetType="DataGridColumnHeader">
+                                <EventSetter Event="Click" Handler="DataGridColumnHeader_OnClick"></EventSetter>
+                            </Style>
+                        </DataGrid.ColumnHeaderStyle>
+                    </DataGrid>
+
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Создание сети">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="468"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="79"></RowDefinition>
+                            <RowDefinition Height="499"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Общие параметры сети" Margin="0,2,0,120" Grid.Row="1">
+                            <Grid Margin="0,0,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="71*"></ColumnDefinition>
+                                    <ColumnDefinition Width="43*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="15*"></RowDefinition>
+                                    <RowDefinition Height="15*"></RowDefinition>
+                                    <RowDefinition Height="22*"></RowDefinition>
+                                    <RowDefinition Height="19*"></RowDefinition>
+                                    <RowDefinition Height="42"></RowDefinition>
+                                    <RowDefinition Height="59"></RowDefinition>
+                                    <RowDefinition Height="60"></RowDefinition>
+
+                                </Grid.RowDefinitions>
+                                <TextBlock TextWrapping="WrapWithOverflow" Margin="5,5,0,0"  Grid.Column="0" Grid.Row="0" >Тип сети</TextBlock>
+                                <ComboBox x:Name="UINetType" Grid.Column="1"  Grid.Row="0" Height="34" ItemsSource="{Binding}" SelectedIndex="1"  VerticalAlignment="Center" />
+
+                                <TextBlock TextWrapping="WrapWithOverflow" Margin="5,5,0,0"  Grid.Column="0" Grid.Row="1" >Кол-во нейронов входного слоя</TextBlock>
+                                <TextBox x:Name="UIInputNeuronCount"  Grid.Column="1"  Grid.Row="1" Height="35"  TextWrapping="NoWrap" Text="150" VerticalAlignment="Center"   />
+                                <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="2" Margin="5,10,0,8" VerticalAlignment="Center" Height="48" >Скрытые слои и их размерность (через ";")</TextBlock>
+                                <TextBox x:Name="UIHiddenLayersCount" Grid.Column="1"  Grid.Row="2" Height="35" TextWrapping="NoWrap" Text="200;100;50" VerticalAlignment="Center"  />
+                                <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center" Margin="5,0,0,0" Height="60"  >Кол-во нейровнов выходного слоя</TextBlock>
+                                <TextBox x:Name="UIOutpuNeuronCount" Grid.Column="1"  Grid.Row="3" Height="35" TextWrapping="NoWrap" Text="2" VerticalAlignment="Center"  />
+                                <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Margin="5,3,0,5" Height="34" >Функция активации</TextBlock>
+                                <ComboBox x:Name="UIActivationFunc" Grid.Column="1"  Grid.Row="4" Height="34"  VerticalAlignment="Center"  ItemsSource="{Binding}" SelectedIndex="3" Grid.RowSpan="1" >
+
+                                </ComboBox>
+                                <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="5" VerticalAlignment="Center" Margin="5,4,0,9" Height="46" >Функция активации выходного слоя</TextBlock>
+                                <ComboBox x:Name="UIOutputActivationFunc" Grid.Column="1"  Grid.Row="5" Height="34" ItemsSource="{Binding}" SelectedIndex="1"  VerticalAlignment="Center" />
+                                <TextBlock x:Name="UIStatusCreateNet" TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="6" VerticalAlignment="Center" Margin="5,0,0,0" Height="46" ></TextBlock>
+                                <Button x:Name="UICreateNet" Content="Создать сеть" Grid.Row="6" HorizontalAlignment="Left" Margin="12,0,0,0" VerticalAlignment="Top" Width="150" Height="50" Click="UICreateNet_Click" Grid.Column="1"/>
+
+
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox Grid.Row="0" Header="Параметры LSTM сети" Height="78" VerticalAlignment="Top">
+                            <Grid Margin="0,0,0,1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="188*"></ColumnDefinition>
+                                    <ColumnDefinition Width="63*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="60*"></RowDefinition>
+
+                                </Grid.RowDefinitions>
+                                <TextBlock TextWrapping="WrapWithOverflow" Margin="5,5,0,0"  Grid.Column="0" Grid.Row="0" >Размерность LSTM нейронов</TextBlock>
+                                <TextBox x:Name="UILSTMSellDimension"  Grid.Column="1"  Grid.Row="0" Height="38" VerticalAlignment="Center" TextWrapping="NoWrap" Text="10" />
+
+                            </Grid>
+                        </GroupBox>
+                    </Grid>
+                    <Grid VerticalAlignment="Bottom"  Grid.ColumnSpan="2">
+                        <ProgressBar x:Name="UIProgressLearner"  VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="50px" Margin="10,0,10,10" Width="auto" >
+                        </ProgressBar>
+                        <TextBlock x:Name="UIProggressTextBlock" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="19,0,0,19" Height="32" Width="900" >
+                        </TextBlock>
+                    </Grid>
+                    <GroupBox x:Name="groupBox1" Header="Параметры обучения" Height="371" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Column="1" HorizontalAlignment="Left" Width="498">
+                        <Grid Margin="0,10,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="231*"/>
+                                <ColumnDefinition Width="181*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="41*"/>
+                                <RowDefinition Height="49*"/>
+                                <RowDefinition Height="34*"/>
+                                <RowDefinition Height="41*"/>
+                                <RowDefinition Height="42*"/>
+                                <RowDefinition Height="41*"/>
+                                <RowDefinition Height="42*"/>
+                                <RowDefinition Height="41*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="0" VerticalAlignment="Center" Margin="5,2,0,3" Height="36" >Алгоритм обучения</TextBlock>
+                            <ComboBox x:Name="UILearnerCombo" Grid.Column="1" SelectedIndex="4"  Grid.Row="0" Height="35" ItemsSource="{Binding}"  VerticalAlignment="Center" Margin="0,3" >
+
+                            </ComboBox>
+
+                            <TextBlock TextWrapping="WrapWithOverflow" Margin="5,2,0,33" VerticalAlignment="Center"  Grid.Column="0" Grid.Row="1" Height="48" Grid.RowSpan="2" ><Run Text="Скорость обучения "/><LineBreak/><Run Text="(через &quot;;&quot;)"/></TextBlock>
+                            <TextBox x:Name="UIlearnRateBox"  Grid.Row="1" Height="34"  TextWrapping="NoWrap" Text="0,001;0,0001;0,00001" VerticalAlignment="Center"  HorizontalAlignment="Right" Width="272" Grid.ColumnSpan="2" Margin="0,7,0,8"/>
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="2" VerticalAlignment="Center" Margin="5,6,0,4" Height="24" ><Run Text="Количество эпох"/></TextBlock>
+                            <TextBox x:Name="UIEpochCountBox" Grid.Column="1"  Grid.Row="1" Height="36" TextWrapping="NoWrap" Text="100" VerticalAlignment="Center" Margin="79,47,0,0" Grid.RowSpan="2"/>
+                            <TextBlock TextWrapping="WrapWithOverflow"  Grid.Column="0"  Grid.Row="3" Margin="5,3,0,3" VerticalAlignment="Center" Height="35" Text="Batch count"/>
+                            <TextBox x:Name="UiBatchCount" Grid.Column="1"  Grid.Row="3" Height="35" TextWrapping="NoWrap" Text="20" VerticalAlignment="Center" Margin="79,3,0,3"/>
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="4" VerticalAlignment="Center" Margin="5,11,0,7" Height="24" ><Run Text="Моментум алгоритма обучения"/></TextBlock>
+                            <TextBox x:Name="UiMomentum" Grid.Column="1"  Grid.Row="4" Height="36" TextWrapping="NoWrap" Text="0,9" VerticalAlignment="Center" Margin="79,3,0,3"/>
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="5" VerticalAlignment="Center" Margin="5,11,0,6" Height="24" ><Run Text="Loss функция "/></TextBlock>
+                            <ComboBox x:Name="UILossFuncVal" Grid.Column="1"  Grid.Row="5" Height="35" SelectedIndex="2"  ItemsSource="{Binding}" VerticalAlignment="Center" Margin="0,3" />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="6" VerticalAlignment="Center" Margin="5,12,0,6" Height="24" ><Run Text="Evaluation Error функция "/></TextBlock>
+                            <ComboBox x:Name="UIEvalFuncVal" Grid.Column="1"  Grid.Row="6" Height="34" SelectedIndex="1"  ItemsSource="{Binding}" VerticalAlignment="Center" Margin="0,4" />
+                            <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="7" VerticalAlignment="Center" Margin="5,11,0,6" Height="24" ><Run Text="Задача "/></TextBlock>
+                            <ComboBox x:Name="UITaskType" Grid.Column="1"  Grid.Row="7" Height="35" SelectedIndex="1" ItemsSource="{Binding}"  VerticalAlignment="Center" Margin="0,3" />
+                        </Grid>
+                    </GroupBox>
+                    <Button x:Name="UITrainNet" Content="Обучать" Grid.Column="1" HorizontalAlignment="Left" Margin="10,393,0,0" VerticalAlignment="Top" Width="220" Height="50" Click="UITrainButtonClick"/>
+                    <Button x:Name="UITestNet" Visibility="Hidden" Content="Тестировать" Grid.Column="1" HorizontalAlignment="Left" Margin="174,393,0,0" VerticalAlignment="Top" Width="150" Height="50" Click="UITestNet_Click"/>
+                    <Button x:Name="UICancel" Content="Отменить" Grid.Column="1" HorizontalAlignment="Left" Margin="351,393,0,0" VerticalAlignment="Top" Width="150" Height="50" Click="UICancel_Click" />
+                    <Grid  Grid.Column="1" Margin="10,448,0,0" Height="88" VerticalAlignment="Top" HorizontalAlignment="Left" Width="490" >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" >Результат обучения:</TextBlock>
+                        <TextBlock x:Name="UITrainStatus" Grid.Column="1" Grid.Row="0"  ></TextBlock>
+                        <TextBlock Grid.Column="0" Grid.Row="1" >Результат тестирования:</TextBlock>
+                        <TextBlock x:Name="UITestStatus" Grid.Column="1" Grid.Row="1"      ></TextBlock>
+                    </Grid>
+                </Grid>
+
+            </TabItem>
+            <TabItem Header="Графики обучения">
+                <Grid x:Name="ad" Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="615*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Column="0" Grid.Row="0" TextAlignment="Center" Margin="0,0,0,0" >Loss</TextBlock>
+                    <TextBlock Grid.Column="1" Grid.Row="0" TextAlignment="Center" Margin="0,0,0,0" >Accuracy</TextBlock>
+
+                    <lvc:CartesianChart Name="UILossChart"  Zoom="Xy"  Grid.Column="0" Grid.Row="1" Series="{Binding SeriesCollection}" LegendLocation="Top" Background="White" >
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Value" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Epoch" Labels="{Binding Labels}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart>
+
+                    <lvc:CartesianChart Name="UIAccuracyChart"  Grid.Column="1" Grid.Row="1" Series="{Binding SeriesCollection}" LegendLocation="Top" Background="White" TextBlock.Foreground="Black"  >
+
+                        <lvc:CartesianChart.AxisY >
+                            <lvc:Axis Title="Value" LabelFormatter="{Binding YFormatter}" ></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Epoch" Labels="{Binding Labels}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart>
+
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Прогнозирование">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="280"></ColumnDefinition>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="81*"/>
+                            <ColumnDefinition Width="59*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="56*"></RowDefinition>
+                            <RowDefinition Height="56*"></RowDefinition>
+                            <RowDefinition Height="49*"></RowDefinition>
+                            <RowDefinition Height="41*"></RowDefinition>
+                            <RowDefinition Height="77*"/>
+                            <RowDefinition Height="72*"/>
+                            <RowDefinition Height="67*"/>
+                            <RowDefinition Height="109*"/>
+                            <RowDefinition Height="74*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock TextWrapping="WrapWithOverflow"   VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Height="48" Margin="0,4"  ><Run Text="Разделитель столбцов"/></TextBlock>
+                        <TextBox x:Name="UIColumtSplitForecast"  Grid.Row="0" Height="30"  TextWrapping="NoWrap" Text=";" TextAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Margin="0,13" />
+                        <TextBlock TextWrapping="WrapWithOverflow" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"  Height="50" Margin="0,6,0,0"   ><Run Text="Есть заголовок таблицы"/></TextBlock>
+                        <CheckBox x:Name="UICheckBoxHeaderForecast" IsChecked="True" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="16"  Width="16"  Grid.Column="1" Margin="51,22,51,18" >
+                            <CheckBox.LayoutTransform>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5" />
+                            </CheckBox.LayoutTransform>
+                        </CheckBox>
+                        <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" VerticalAlignment="Center" Grid.Row="2"  Height="30" Margin="0,10,0,9"  ><Run Text="Нормализация"/></TextBlock>
+                        <ComboBox x:Name="UINormalizeMethodForecast" Grid.Column="1" ItemsSource="{Binding}" SelectedIndex="1"  Grid.Row="2" Height="30"  VerticalAlignment="Center" Margin="0,10,0,9"  />
+                        <TextBlock TextWrapping="WrapWithOverflow" Grid.Column="0" Grid.Row="3" VerticalAlignment="Center"  Height="34" Margin="0,5,0,2"  Text="Окно значений"  />
+                        <TextBox x:Name="UIWindowForecast" Height="26" Grid.Column="1" Grid.Row="3" TextWrapping="NoWrap" Text="30" VerticalAlignment="Center" TextAlignment="Center" Margin="0,9,0,6"   />
+                        <Button x:Name="UIClearUniportantInfoForecast" Content="Очистить &#xD;&#xA;данные"  TextBlock.TextAlignment="Center" Padding="0" Grid.Column="0"  Grid.Row="4"  Width="123" Click="UIClearUniportantInfoForecast_Click" Margin="10,8,0,6" HorizontalAlignment="Left"  />
+                        <Button x:Name="UILeaveOnlyStockPriceForecast"  Grid.Row="5" Grid.Column="0" Margin="10,8,0,6" TextBlock.TextAlignment="Center" Padding="0" Click="UILeaveOnlyStockPriceForecast_Click" Grid.ColumnSpan="2" HorizontalAlignment="Left" Width="152" >
+                            <TextBlock TextAlignment="Center" Width="142" Height="53"  >Оставить цены и<LineBreak/>объем</TextBlock>
+                        </Button>
+                        <ComboBox x:Name="UIUseDataColumnsForecast" Grid.Column="0" Grid.Row="6" SelectedIndex="1" HorizontalAlignment="Left" Width="143" VerticalAlignment="Center" Height="30" Margin="10,19,0,18">
+                            <ComboBoxItem>
+                                <TextBlock Text="Один столбец"/>
+                            </ComboBoxItem>
+                            <TextBlock Text="Все данные"/>
+                        </ComboBox>
+                        <TextBox x:Name="UIAnalysisDataForecast" Grid.Column="1"  Grid.Row="7" Height="24" TextWrapping="NoWrap" Text="0;1;2;3;4" VerticalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Grid.Column="0"  Grid.Row="7" Margin="5,0,0,0" Height="99" VerticalAlignment="Top"   ><Run Text="Индексы всех столбцов, для анализа (через &quot;;&quot;)"/></TextBlock>
+
+                    </Grid>
+
+                    <Grid Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="74*"></RowDefinition>
+                            <RowDefinition Height="53*"></RowDefinition>
+                            <RowDefinition Height="474*"></RowDefinition>
+
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Margin="10,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40*" MinWidth="80" MaxWidth="130"/>
+                                <ColumnDefinition Width="171*"/>
+                                <ColumnDefinition Width="140"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock TextWrapping="Wrap"  VerticalAlignment="Center" Height="48"  >Путь к данным</TextBlock>
+                            <TextBox x:Name="UiTextPathToFileForecast"  Grid.Column="1"  TextWrapping="NoWrap"  VerticalAlignment="Center" Text="" RenderTransformOrigin="0.5,0.5" Height="30" Margin="0,12,0,11">
+                            </TextBox>
+                            <Button x:Name="UiButtonLoadForecast" Content="Загрузить" Grid.Column="3" HorizontalAlignment="Left"  VerticalAlignment="Center" Width="125" Height="30" Margin="5,12,0,11" Click="UiButtonLoadForecast_Click" />
+                        </Grid>
+                        <Button  x:Name="UIEvaluateButton" Grid.Row="1" Click="UIEvaluateButton_Click" Margin="0,5,19,5" HorizontalAlignment="Right" Width="182" >Оценить работу сети</Button>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="258*" MaxWidth="600"/>
+                                <ColumnDefinition Width="95*"/>
+
+                            </Grid.ColumnDefinitions>
+                            <GroupBox Header="Исходные данне">
+                                <DataGrid x:Name="UIDatagridLoadedDataForecast" ItemsSource="{Binding}" />
+                            </GroupBox>
+
+                            <GroupBox Grid.Column="1" Header="Результат работы">
+                                <DataGrid x:Name="UIDatagridResultOfAnalysis" ItemsSource="{Binding}"/>
+                            </GroupBox>
+
+                        </Grid>
+                    </Grid>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Результаты регрессии">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Button x:Name="UIEvaluateRegressionModel" Content="Рассчитать" Margin="10,7,0,5" HorizontalAlignment="Left" Width="165" Click="UIEvaluateRegressionModel_Click"></Button>
+                    <Button x:Name="UIClearRegressChart" Content="Очистить" Margin="213,7,0,5" HorizontalAlignment="Left" Width="165" Click="UIClearRegressChart_Click"></Button>
+                    <Button x:Name="UIEvaluateRegressionModel_Copy" Content="Рассчитать 2" HorizontalAlignment="Left" Width="165" Click="UIEvaluateRegressionModel_Copy_Click" Height="38" Margin="441,7,0,5"/>
+
+                    <lvc:CartesianChart Name="UIRegressionResultChart"  Zoom="Xy" Grid.Row="1" Series="{Binding}" LegendLocation="Top" Background="White" >
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Value" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Epoch" Labels="{Binding Labels}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                    </lvc:CartesianChart>
+
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+
+    </Grid>
+</Window>
